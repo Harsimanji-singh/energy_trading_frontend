@@ -1,10 +1,9 @@
-import Head from "next/head";
-import Image from "next/image";
+import React from "react";
 import NftBox from "../components/NftBox";
-import styles from "../styles/Home.module.css";
-import { useConnectionStatus } from "@thirdweb-dev/react";
+import { useAddress, useConnectionStatus } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
-export default function Home() {
+const energyListing = () => {
+  const account = useAddress();
   const connectionStatus = useConnectionStatus();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState();
@@ -13,11 +12,15 @@ export default function Home() {
     fetch("http://127.0.0.1:8000/nft")
       .then((response) => response.json())
       .then((data) => {
-        setData(data);
+        // setData(data);
+        console.log(data);
+        console.log(account);
+        const newData = data.filter((entry) => entry.address === account);
+        console.log(newData);
+        setData(newData);
         setLoading(false);
       });
-  }, []);
-
+  }, [account]);
   return (
     <div className="container mx-auto">
       <h1 className="py-4 px-4 font-bold text-2xl">Recently Listed</h1>
@@ -43,4 +46,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default energyListing;
